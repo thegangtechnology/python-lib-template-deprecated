@@ -5,9 +5,10 @@ from os.path import join, dirname
 def get_version():
     fname = join(dirname(__file__), "src/{{cookiecutter.project_name}}/__version__.py")
     with open(fname) as f:
-        version='temp-version' # keep pep8 happy
-        exec(f.read()) # version defined here
-        return version
+        ldict={}
+        code = f.read()
+        exec(code, globals(), ldict) # version defined here
+        return ldict['version']
     
 
 setup(name='{{cookiecutter.project_name}}',
