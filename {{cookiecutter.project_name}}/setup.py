@@ -1,7 +1,10 @@
 from setuptools import setup, find_packages
+from os.path import join, dirname
+
 
 def get_version():
-    with open("src/{{cookiecutter.project_name}}/__version__.py") as f:
+    fname = join(dirname(__file__), "src/{{cookiecutter.project_name}}/__version__.py")
+    with open(fname) as f:
         version='temp-version' # keep pep8 happy
         exec(f.read()) # version defined here
         return version
