@@ -1,0 +1,14 @@
+[run]
+omit = 
+  tests/*
+  notebooks/**/*
+  sample/**/*
+  setup.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    @abstract
+    @abc.abstract
+    raise NotImplementedError()
+    if TYPE_CHECKING:

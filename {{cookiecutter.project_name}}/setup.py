@@ -9,9 +9,10 @@ def get_version():
         code = f.read()
         exec(code, globals(), ldict) # version defined here
         return ldict['version']
-    
 
-setup(name='{{cookiecutter.project_name}}',
+package_name = "{{cookiecutter.project_name}}"
+
+setup(name=package_name,
       version=get_version(),
       description='',
       long_description=open('README.md').read().strip(),
@@ -20,7 +21,7 @@ setup(name='{{cookiecutter.project_name}}',
       url='',
       package_dir={'': 'src'},
       packages=find_packages('src'),
-      py_modules=['{{cookiecutter.project_name}}'],
+      py_modules=[package_name],
       install_requires=[
           'numpy'
       ],
@@ -40,4 +41,8 @@ setup(name='{{cookiecutter.project_name}}',
       license='Private',
       zip_safe=False,
       keywords='',
-      classifiers=[''])
+      classifiers=[''],
+      package_data = {
+            package_name: ['py.typed'],
+        }
+    )

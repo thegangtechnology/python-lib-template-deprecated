@@ -1,0 +1,95 @@
+# Official language image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/python/tags/
+services:
+  - docker:dind
+
+stages:
+  - lint
+  - test
+
+# Change pip's cache directory to be inside the project directory since we can
+# only cache local items.
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+#   SONAR_TOKEN: "$SONAR_TOKEN"
+#   SONAR_HOST_URL: "https://sonarqube.dev.thegang.tech"
+
+# .sonarqube_run: &sonarqube_run
+# - pip install pipenv
+# - pipenv install --system --deploy --ignore-pipfile
+# - pytest --cov-report=xml:coverage.xml --cov-config=.coveragerc --cov=./
+# - sonar-scanner -Dsonar.projectKey=demo-sonarqube
+#       -Dsonar.python.coverage.reportPaths=coverage.xml
+#       -Dsonar.qualitygate.wait=true
+#       -Dsonar.exclusions="*.xml"
+#       -Dsonar.branch.name=$CI_COMMIT_BRANCH
+
+# Pip's cache doesn't store the python packages
+# https://pip.pypa.io/en/stable/reference/pip_install/#caching
+#
+# If you want to also cache the installed packages, you have to install
+# them in a virtualenv and cache it as well.
+cache:
+  paths:
+    - .cache/pip
+
+before_script:
+  - python -V  # Print out python version for debugging
+
+test:
+  stage: test
+  image: python:3.8
+  script:
+    - pip install -e ".[test]"
+    - pytest --cov=src
+
+lint:
+  stage: lint
+  image: python:3.8
+  script:
+    - pip install flake8
+    - flake8
+  allow_failure: false
+
+run:
+  script:
+    - python setup.py bdist_wheel
+    # an alternative approach is to install and run:
+    - pip install dist/*
+    # run the command here
+  artifacts:
+    paths:
+      - dist/*.whl
+
+# sonarqube:
+#   stage: test
+#   image:
+#     name: thegang/python3-sonar-scanner:3.8
+#   script:
+#     - *sonarqube_run
+#   allow_failure: false
+#   variables:
+#     GIT_DEPTH: 0
+
+# sonarqube-mr:
+#   stage: test
+#   image:
+#     name: thegang/python3-sonar-scanner:3.8
+#   script:
+#     - *sonarqube_run
+#   allow_failure: false
+#   only:
+#     - merge_requests
+#   variables:
+#     GIT_DEPTH: 0
+
+# pages:
+#   script:
+#     - pip install sphinx sphinx-rtd-theme
+#     - cd doc ; make html
+#     - mv build/html/ ../public/
+#   artifacts:
+#     paths:
+#       - public
+#   only:
+#     - master
