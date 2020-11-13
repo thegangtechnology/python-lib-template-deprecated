@@ -6,6 +6,7 @@ services:
 stages:
   - lint
   - test
+  - build
 
 # Change pip's cache directory to be inside the project directory since we can
 # only cache local items.
@@ -51,12 +52,16 @@ lint:
     - flake8
   allow_failure: false
 
-run:
+package:
+  stage: build
+  image: python:3.8
   script:
     - python setup.py bdist_wheel
     # an alternative approach is to install and run:
     - pip install dist/*
     # run the command here
+  only:
+    - master
   artifacts:
     paths:
       - dist/*.whl
