@@ -1,16 +1,18 @@
-from setuptools import setup, find_packages
 from os.path import join, dirname
+
+from setuptools import setup, find_packages
 
 
 def get_version():
     fname = join(dirname(__file__), "src/{{cookiecutter.project_name}}/__version__.py")
     with open(fname) as f:
-        ldict={}
+        ldict = {}
         code = f.read()
-        exec(code, globals(), ldict) # version defined here
+        exec(code, globals(), ldict)  # version defined here
         return ldict['version']
 
-package_name = "{{cookiecutter.project_name}}"
+
+package_name = "awesome_package"
 
 setup(name=package_name,
       version=get_version(),
@@ -42,7 +44,7 @@ setup(name=package_name,
       zip_safe=False,
       keywords='',
       classifiers=[''],
-      package_data = {
-            package_name: ['py.typed'],
-        }
-    )
+      package_data={
+          package_name: ['py.typed'],
+      }
+      )
