@@ -12,7 +12,7 @@ def get_version():
         return ldict['version']
 
 
-package_name = "awesome_package"
+package_name = "{{cookiecutter.project_name}}"
 
 setup(name=package_name,
       version=get_version(),
